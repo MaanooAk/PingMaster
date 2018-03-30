@@ -1,7 +1,7 @@
-import gi
 
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk
+# import gi
+# gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 from threading import Lock
 
@@ -13,7 +13,7 @@ from Ips import get_hostname, generate_ips
 
 class MainWindow(Gtk.Window):
     def __init__(self):
-        super().__init__(title="Ping Master")
+        super().__init__(title="Ping MasterA")
         self.set_border_width(10)
 
         self.title = "Ping Master"
@@ -42,7 +42,8 @@ class MainWindow(Gtk.Window):
         self.add(vbox)
 
         self.stack = Gtk.Stack()
-        self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        self.stack.set_transition_type(
+            Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.stack.set_transition_duration(300)
 
         # Tabs
@@ -98,7 +99,8 @@ class MainWindow(Gtk.Window):
         button = GtkUtils.image_button(Gtk.STOCK_PASTE, self.on_paste_clicked)
         box.add(button)
 
-        button = GtkUtils.image_button(Gtk.STOCK_REFRESH, self.on_refresh_clicked)
+        button = GtkUtils.image_button(Gtk.STOCK_REFRESH,
+                                       self.on_refresh_clicked)
         box.add(button)
 
         self.hb.pack_start(box)
@@ -106,8 +108,9 @@ class MainWindow(Gtk.Window):
         #  Right header buttons
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
-        button = Gtk.MenuButton();
-        button.add(Gtk.Image.new_from_icon_name("open-menu-symbolic", Gtk.IconSize.BUTTON))
+        button = Gtk.MenuButton()
+        button.add(Gtk.Image.new_from_icon_name("open-menu-symbolic",
+                                                Gtk.IconSize.BUTTON))
         box.add(button)
         self.properties_button = button
 
@@ -191,7 +194,7 @@ class MainWindow(Gtk.Window):
 
         label = Gtk.Label()
         label.set_markup(
-            "<b>TODO</b> implement\n<b>TODO</b> implement\n<b>TODO</b> implement\n"
+            "<b>TODO</b> implement\n<b>TODO</b> implement\n"
             "<b>TODO</b> implement\n<b>TODO</b> implement\n")
         label.set_line_wrap(True)
 
@@ -264,7 +267,7 @@ class MainWindow(Gtk.Window):
         menu.show_all()
         self.menu = menu
 
-        self.properties_button.set_popup(menu);
+        self.properties_button.set_popup(menu)
 
     def delete_event(self, p1, p2):
         self.repeat = False
@@ -330,16 +333,19 @@ class MainWindow(Gtk.Window):
             self.set_status("Alive " + self.hostname)
         else:
             self.set_status("Failed " + self.hostname,
-                            "Failed " + self.hostname + " with " + ("no reply" if self.code == 1 else "error"))
+                            "Failed " + self.hostname + " with " +
+                            ("no reply" if self.code == 1 else "error"))
 
         # Check for auto close
-        if (self.alive and self.close_on_alive) or (not self.alive and self.close_on_fail):
+        if (self.alive and self.close_on_alive) or \
+                (not self.alive and self.close_on_fail):
             self.close()
             return
 
         # Check for repeat
         if self.stack.get_visible_child_name() == "costume" and self.alive:
-            self.label_ips.set_text(self.hostname + "\n" + self.label_ips.get_text())
+            self.label_ips.set_text(self.hostname + "\n" +
+                                    self.label_ips.get_text())
 
     def perform_ping(self):
 
@@ -370,7 +376,8 @@ class MainWindow(Gtk.Window):
             self.start_count -= 1
             self.last_thread.active = False
 
-        self.last_thread = ping_thread(self.hostname, self.perform_ping_start, self.perform_ping_callback, delay)
+        self.last_thread = ping_thread(self.hostname, self.perform_ping_start,
+                                       self.perform_ping_callback, delay)
 
 
 def start_main_window():

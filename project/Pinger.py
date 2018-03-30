@@ -18,4 +18,5 @@ class Pinger:
 class OsPinger(Pinger):
 
     def ping(self, hostname: str) -> int:
-        return call(["ping", "-c", "1", "-W", "1", hostname], stdout=DEVNULL, stderr=DEVNULL)
+        return call(["ping", "-c", "1", "-W", "1", hostname],
+                    stdout=DEVNULL, stderr=DEVNULL)
