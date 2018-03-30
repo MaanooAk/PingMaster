@@ -3,6 +3,7 @@ from subprocess import call, DEVNULL
 
 
 class Pinger:
+
     def ping(self, hostname: str) -> int:
         """Returns an int representing the ping result
 
@@ -15,5 +16,6 @@ class Pinger:
 
 
 class OsPinger(Pinger):
+
     def ping(self, hostname: str) -> int:
         return call(["ping", "-c", "1", "-W", "1", hostname], stdout=DEVNULL, stderr=DEVNULL)

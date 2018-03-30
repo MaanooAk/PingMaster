@@ -1,7 +1,11 @@
 
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
+
+
+def get_clipboard():
+    return Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).wait_for_text()
 
 
 def button(name, click, data=None):

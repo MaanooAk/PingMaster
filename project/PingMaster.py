@@ -1,57 +1,17 @@
-
 import gi
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
 
 from threading import Lock
 
 import GtkUtils
+import Dialogs
 from PingThread import ping_thread
-
-
-def get_clipboard():
-    return Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).wait_for_text()
-
-
-def get_hostname(name):
-    if name == "dns":
-        return "8.8.8.8"
-    elif name == "router":
-        return "192.168.1.254"
-    elif name == "web":
-        return "github.com"
-    else:
-        return "8.8.8.8"
-
-
-def generate_ips(text):
-    parts = text.split(".")
-
-    # TODO fix this
-    for i1 in generate_ips_part(parts[0]):
-        for i2 in generate_ips_part(parts[1]):
-            for i3 in generate_ips_part(parts[2]):
-                for i4 in generate_ips_part(parts[3]):
-                    yield i1 + "." + i2 + "." + i3 + "." + i4
-
-
-def generate_ips_part(text):
-    if "*" in text:
-        start = 0
-        end = 255
-    elif "[" in text:
-        start = int(text[1:-1].split("-")[0])
-        end = int(text[1:-1].split("-")[1])
-    else:
-        yield text
-        return
-
-    for i in range(start, end + 1):
-        yield str(i)
+from Ips import get_hostname, generate_ips
 
 
 class MainWindow(Gtk.Window):
-
     def __init__(self):
         super().__init__(title="Ping Master")
         self.set_border_width(10)
@@ -295,7 +255,7 @@ class MainWindow(Gtk.Window):
         menu.append(Gtk.SeparatorMenuItem())
 
         def on_about_activate(widget, window):
-            show_dialog(AboutDialog(window))
+            Dialogs.show_dialog(Dialogs.AboutDialog(window))
 
         item = Gtk.MenuItem("About")
         item.connect("activate", on_about_activate, self)
@@ -339,7 +299,7 @@ class MainWindow(Gtk.Window):
         self.perform_ping()
 
     def on_paste_clicked(self, widget):
-        text = get_clipboard()
+        text = GtkUtils.get_clipboard()
         if text is not None:
             self.entry_hostname.set_text(text)
             self.hostname = text
@@ -411,29 +371,6 @@ class MainWindow(Gtk.Window):
             self.last_thread.active = False
 
         self.last_thread = ping_thread(self.hostname, self.perform_ping_start, self.perform_ping_callback, delay)
-
-
-class AboutDialog(Gtk.Dialog):
-
-    def __init__(self, parent):
-        super().__init__("About", parent, 0, (Gtk.STOCK_OK, Gtk.ResponseType.OK))
-
-        self.set_border_width(10)
-
-        label = Gtk.Label()
-        label.set_markup(
-            "<big><b>Ping Master</b> <small>v.0.3</small></big>\n\n" +
-            "Created by <b>MaanooAk</b>, more at <a href=\"https://maanoo.com\">maanoo.com</a>\n\n")
-
-        box = self.get_content_area()
-        box.add(label)
-        self.show_all()
-
-
-def show_dialog(dialog):
-    result = dialog.run()
-    dialog.destroy()
-    return result
 
 
 def start_main_window():
