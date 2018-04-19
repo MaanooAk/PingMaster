@@ -56,7 +56,7 @@ class MainWindow(Gtk.Window):
         self.entry_ips = None
         self.button = None
         self.label_ips = None
-        self.build_tab_costume()
+        self.build_tab_custom()
 
         self.build_tab_advanced()
 
@@ -152,7 +152,7 @@ class MainWindow(Gtk.Window):
 
         self.stack.add_titled(grid, "simple", "Simple")
 
-    def build_tab_costume(self):
+    def build_tab_custom(self):
 
         self.entry_ips = Gtk.Entry()
         self.entry_ips.set_hexpand(True)
@@ -188,7 +188,7 @@ class MainWindow(Gtk.Window):
         grid.attach(box, 0, 1, 3, 1)
         grid.attach(label_ips_warp, 0, 2, 3, 1)
 
-        self.stack.add_titled(grid, "costume", "Costume")
+        self.stack.add_titled(grid, "custom", "Custom")
 
     def build_tab_advanced(self):
 
@@ -343,7 +343,7 @@ class MainWindow(Gtk.Window):
             return
 
         # Check for repeat
-        if self.stack.get_visible_child_name() == "costume" and self.alive:
+        if self.stack.get_visible_child_name() == "custom" and self.alive:
             self.label_ips.set_text(self.hostname + "\n" +
                                     self.label_ips.get_text())
 
